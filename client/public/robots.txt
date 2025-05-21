@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+Disallow: /.netlify/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /tmp/
+
+# Правила для Yandex
+User-agent: Yandex
+Allow: /
+Disallow: /.netlify/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /tmp/
+
+# Основной домен для индексации
+Host: https://unictaste.ru
+
+# Sitemap для индексации всех страниц
+Sitemap: https://unictaste.ru/sitemap.xml
+
+# Исключаем параметры UTM из индексации
+Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content /
