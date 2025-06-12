@@ -47,6 +47,7 @@ const formSchema = z.object({
   phone: z.string()
     .length(13, { message: "Номер должен быть в формате +375XXXXXXXXX" })
     .regex(/^\+375\d{9}$/, { message: "Формат: +375XXXXXXXXX" }),
+  telegram: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -87,6 +88,7 @@ export default function ApplicationForm() {
       fullName: "",
       birthDate: "",
       phone: "+375",
+      telegram: "",
     },
   });
 
@@ -152,6 +154,7 @@ export default function ApplicationForm() {
         fullName: values.fullName,
         birthDate: values.birthDate,
         phone: values.phone,
+        telegram: values.telegram || undefined,
         source: 'main_form'
       });
 
@@ -161,7 +164,7 @@ export default function ApplicationForm() {
       // Сохраняем флаг успешной отправки и переходим на страницу благодарности
       sessionStorage.setItem('applicationSent', 'true');
 
-      form.reset({ fullName: "", birthDate: "", phone: "+375" });
+      form.reset({ fullName: "", birthDate: "", phone: "+375", telegram: "" });
       setIsPhoneComplete(false);
 
       // Переходим на страницу благодарности
@@ -306,6 +309,26 @@ export default function ApplicationForm() {
 
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+                      {/* ============ Telegram Top Field ============ */}
+                      <FormField
+                        control={form.control}
+                        name="telegram"
+                        render={({ field }) => (
+                          <FormItem className="mb-2">
+                            <FormLabel className="text-sm font-medium mb-1">@ Telegram (необязательно)</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="@username"
+                                {...field}
+                                maxLength={32}
+                                className="py-3 px-3 rounded-lg bg-white/70 backdrop-blur-sm border-white/30 text-foreground text-sm"
+                              />
+                            </FormControl>
+                            <FormMessage className="text-xs mt-1" />
+                          </FormItem>
+                        )}
+                      />
+                      {/* ============ Остальные поля ============ */}
                       <FormField
                         control={form.control}
                         name="fullName"
@@ -394,6 +417,26 @@ export default function ApplicationForm() {
                         </a>
                       </div>
 
+                      {/* ============ Telegram Bottom Field ============ */}
+                      <FormField
+                        control={form.control}
+                        name="telegram"
+                        render={({ field }) => (
+                          <FormItem className="mb-2">
+                            <FormLabel className="text-sm font-medium mb-1">@ Telegram (необязательно)</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="@username"
+                                {...field}
+                                maxLength={32}
+                                className="py-3 px-3 rounded-lg bg-white/70 backdrop-blur-sm border-white/30 text-foreground text-sm"
+                              />
+                            </FormControl>
+                            <FormMessage className="text-xs mt-1" />
+                          </FormItem>
+                        )}
+                      />
+                      {/* ============ конец вставки ============ */}
                       <Button
                         type="submit"
                         className="w-full primary-gradient text-white py-3 text-sm font-medium hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden group mt-3"
