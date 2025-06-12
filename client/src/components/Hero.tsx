@@ -7,6 +7,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from "@/lib/ui-components";
+import { submitApplicationWithTelegram } from "@/lib/applications";
 
 // Импорт иконок магазинов для предзагрузки
 import googlePlayIcon from "/icons/google-play.svg";
@@ -128,29 +129,13 @@ export default function Hero() {
     setErrorMessage("");
 
     try {
-      const response = await fetch('/.netlify/functions/applications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fullName: values.fullName,
-          birthDate: values.birthDate,
-          phone: values.phone
-        }),
+      // Отправляем в Firebase и дублируем в Telegram
+      const result = await submitApplicationWithTelegram({
+        fullName: values.fullName,
+        birthDate: values.birthDate,
+        phone: values.phone,
+        source: 'hero_form'
       });
-
-      let responseData = null;
-      try {
-        if (response.headers.get('content-type')?.includes('application/json')) {
-          responseData = await response.json();
-        }
-      } catch (e) {
-        // Игнорируем ошибки парсинга JSON, если ответ пустой
-      }
-
-      if (!response.ok) {
-        const message = responseData?.message || `Ошибка ${response.status}: ${response.statusText}`;
-        throw new Error(message);
-      }
 
       setSubmitStatus("success");
       setIsSuccess(true);

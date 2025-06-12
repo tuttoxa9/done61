@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
+import { submitApplicationWithTelegram } from "@/lib/applications";
 import {
   Button,
   Input,
@@ -144,35 +145,25 @@ export default function ApplicationForm() {
     setErrorMessage("");
 
     try {
-      const response = await fetch('/.netlify/functions/applications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fullName: values.fullName,
-          birthDate: values.birthDate,
-          phone: values.phone
-        }),
+      // Отправляем в Firebase и дублируем в Telegram
+      const result = await submitApplicationWithTelegram({
+        fullName: values.fullName,
+        birthDate: values.birthDate,
+        phone: values.phone,
+        source: 'main_form'
       });
-
-      let responseData = null;
-      try {
-        if (response.headers.get('content-type')?.includes('application/json')) {
-          responseData = await response.json();
-        }
-      } catch (e) {
-        // Игнорируем ошибки парсинга JSON, если ответ пустой
-      }
-
-      if (!response.ok) {
-        const message = responseData?.message || `Ошибка ${response.status}: ${response.statusText}`;
-        throw new Error(message);
-      }
 
       setSubmitStatus("success");
       setIsSuccess(true);
+
+      // Уведомляем пользователя о результате
+      const description = result.telegramSent
+        ? 'Мы получили вашу заявку и скоро с вами свяжемся.'
+        : 'Заявка сохранена! Мы обработаем её в ближайшее время.';
+
       toast({
         title: 'Заявка отправлена!',
-        description: 'Мы получили вашу заявку и скоро с вами свяжемся.',
+        description,
         variant: 'default'
       });
 
