@@ -35,6 +35,7 @@ const formSchema = z.object({
   phone: z.string()
     .length(13, { message: "Номер должен быть в формате +375XXXXXXXXX" })
     .regex(/^\+375\d{9}$/, { message: "Формат: +375XXXXXXXXX" }),
+  telegram: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -75,6 +76,7 @@ export default function Hero() {
       fullName: "",
       birthDate: "",
       phone: "+375",
+      telegram: ""
     },
   });
 
@@ -136,6 +138,7 @@ export default function Hero() {
         fullName: values.fullName,
         birthDate: values.birthDate,
         phone: values.phone,
+        telegram: values.telegram || undefined,
         source: 'hero_form'
       });
 
@@ -148,7 +151,8 @@ export default function Hero() {
       form.reset({
         fullName: "",
         birthDate: "",
-        phone: "+375"
+        phone: "+375",
+        telegram: ""
       });
       setIsPhoneComplete(false);
 
@@ -229,6 +233,25 @@ export default function Hero() {
                       ) : (
                         <Form {...form}>
                           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3 max-w-[300px] mx-auto">
+                            {/* Поле Telegram перед кнопкой отправки */}
+                            <FormField
+                              control={form.control}
+                              name="telegram"
+                              render={({ field }) => (
+                                <FormItem className="mb-2">
+                                  <FormLabel className="text-sm font-medium mb-1">@ Telegram (необязательно)</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder="@username"
+                                      {...field}
+                                      maxLength={32}
+                                      className="py-3 px-3 rounded-lg bg-white/70 backdrop-blur-sm border-white/30 text-foreground text-sm"
+                                    />
+                                  </FormControl>
+                                  <FormMessage className="text-xs mt-1" />
+                                </FormItem>
+                              )}
+                            />
                             <FormField control={form.control} name="fullName" render={({ field }) => (
                               <FormItem>
                                 <FormControl>
