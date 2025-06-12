@@ -39,7 +39,11 @@ export async function submitApplication(data: ApplicationData): Promise<string> 
 
     return docRef.id;
   } catch (error) {
-    console.error('Error submitting application: ', error);
+    console.error('Error submitting application to Firebase: ', error);
+    console.error('Firebase config check:', {
+      hasFirestore: !!db,
+      environment: typeof window !== 'undefined' ? 'browser' : 'server'
+    });
     throw error;
   }
 }
@@ -59,6 +63,7 @@ export async function submitApplicationWithTelegram(data: ApplicationData): Prom
 
     // Затем пытаемся отправить в Telegram через существующую функцию
     try {
+      console.log('Sending to Telegram via Netlify function...');
       const response = await fetch('/.netlify/functions/applications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -72,7 +77,14 @@ export async function submitApplicationWithTelegram(data: ApplicationData): Prom
       telegramSent = response.ok;
 
       if (!response.ok) {
-        console.warn('Failed to send to Telegram, but saved to Firebase');
+        const errorText = await response.text();
+        console.warn('Failed to send to Telegram:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText
+        });
+      } else {
+        console.log('Successfully sent to Telegram');
       }
     } catch (telegramError) {
       console.warn('Telegram notification failed, but saved to Firebase:', telegramError);

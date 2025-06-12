@@ -8,10 +8,27 @@ interface ApplicationData {
 }
 
 const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
+  // CORS заголовки
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+  };
+
+  // Обработка preflight запроса
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: '',
+    };
+  }
+
   // Проверка метода запроса
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Method Not Allowed" }),
     };
   }
@@ -24,6 +41,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     if (!data.fullName || !data.birthDate || !data.phone) {
       return {
         statusCode: 400,
+        headers: corsHeaders,
         body: JSON.stringify({ message: "Missing required fields: fullName, birthDate, and phone" }),
       };
     }
@@ -35,8 +53,10 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     // Проверка наличия переменных окружения
     if (!botToken || !chatId) {
       console.error("Missing environment variables: TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID");
+      console.error("Available env vars:", Object.keys(process.env).filter(key => key.includes('TELEGRAM')));
       return {
         statusCode: 500,
+        headers: corsHeaders,
         body: JSON.stringify({ message: "Server configuration error" }),
       };
     }
@@ -69,12 +89,14 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     // Возвращаем успешный ответ
     return {
       statusCode: 200,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Application submitted successfully" }),
     };
   } catch (error) {
     console.error("Error processing application:", error);
     return {
       statusCode: 500,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Internal Server Error" }),
     };
   }
