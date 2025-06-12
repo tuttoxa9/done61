@@ -19,9 +19,6 @@ export default function Header() {
               <span className="gradient-text font-heading tracking-tighter">ЮНИК</span>
             </div>
           </Link>
-          <div className="text-xs text-slate-600 font-medium select-text mt-1 ml-[44px] sm:ml-0 whitespace-pre-line">
-            Минск, ул. Игнатенко 7, 2 этаж
-          </div>
         </div>
 
         <div className="hidden md:flex items-center">
@@ -48,9 +45,6 @@ export default function Header() {
                   <span className="gradient-text font-heading tracking-tighter">ЮНИК</span>
                 </div>
               </Link>
-              <div className="text-xs text-slate-600 font-medium select-text mt-1 ml-[44px] sm:ml-0 whitespace-pre-line">
-                Минск, ул. Игнатенко 7, 2 этаж
-              </div>
               <div>
                 <Button
                   onClick={() => {

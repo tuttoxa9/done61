@@ -22,7 +22,7 @@ export default function HowToStart() {
     {
       icon: <ShieldCheck className="h-5 w-5 text-secondary" />,
       title: "Термокороб",
-      description: "Если у вас нет своего термокороба, можно взять его в офисе под залоговую стоимость 50 р."
+      description: "Если у вас нет своего термокороба, можно получить его в офисе бесплатно."
     },
     {
       icon: <Download className="h-5 w-5 text-primary" />,
@@ -37,7 +37,7 @@ export default function HowToStart() {
     {
       icon: <Wallet className="h-5 w-5 text-primary" />,
       title: "Оплата",
-      description: "Выплаты до 3 раз в неделю на офисе."
+      description: "Выплаты до 3 раз в неделю."
     },
     {
       icon: <Bike className="h-5 w-5 text-secondary" />,
@@ -53,8 +53,8 @@ export default function HowToStart() {
       answer: "Нет, опыт работы не требуется. Мы проводим обучение для всех новых курьеров."
     },
     {
-      question: "Какой размер залога за термокороб?",
-      answer: "Размер залога составляет 50 р. Залог возвращается при возврате оборудования."
+      question: "Предоставляется ли термокороб бесплатно?",
+      answer: "Да, термокороб предоставляется бесплатно всем новым курьерам в офисе."
     },
     {
       question: "Сколько я смогу заработать?",

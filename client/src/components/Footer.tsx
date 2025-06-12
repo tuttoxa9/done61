@@ -2,7 +2,6 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import {
   Phone,
-  MapPin,
   ArrowRight,
   Zap,
   CheckCircle2,
@@ -121,15 +120,7 @@ export default function Footer() {
                   </a>
                 </div>
               </li>
-              <li className="flex items-start">
-                <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center mr-4 mt-1">
-                  <MapPin className="text-secondary h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm text-slate-400 mb-1">Адрес</p>
-                  <span className="text-white">г. Минск, ул. Игнатенко 7, 2 этаж</span>
-                </div>
-              </li>
+
             </ul>
           </div>
 

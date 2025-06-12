@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { submitApplicationWithTelegram } from "@/lib/applications";
 import {
@@ -52,6 +53,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function ApplicationForm() {
   const { toast } = useToast();
+  const [location, navigate] = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isPhoneComplete, setIsPhoneComplete] = useState(false);
@@ -156,23 +158,14 @@ export default function ApplicationForm() {
       setSubmitStatus("success");
       setIsSuccess(true);
 
-      // Уведомляем пользователя о результате
-      const description = result.telegramSent
-        ? 'Мы получили вашу заявку и скоро с вами свяжемся.'
-        : 'Заявка сохранена! Мы обработаем её в ближайшее время.';
-
-      toast({
-        title: 'Заявка отправлена!',
-        description,
-        variant: 'default'
-      });
+      // Сохраняем флаг успешной отправки и переходим на страницу благодарности
+      sessionStorage.setItem('applicationSent', 'true');
 
       form.reset({ fullName: "", birthDate: "", phone: "+375" });
       setIsPhoneComplete(false);
 
-      setTimeout(() => {
-        document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' });
-      }, 300);
+      // Переходим на страницу благодарности
+      navigate('/thank-you');
 
     } catch (error: any) {
       console.error('Submit error:', error);

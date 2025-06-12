@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useLocation } from "wouter";
 import { Button } from "@/lib/ui-components";
 import { ChevronRight, Wallet, Clock, Users, Smartphone, Zap, ArrowRight, Download, Phone, Send, CheckCircle2, Calendar } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -60,6 +61,7 @@ function PreloadImages() {
 }
 
 export default function Hero() {
+  const [location, navigate] = useLocation();
   const [activeFeature, setActiveFeature] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -140,12 +142,18 @@ export default function Hero() {
       setSubmitStatus("success");
       setIsSuccess(true);
 
+      // Сохраняем флаг успешной отправки и переходим на страницу благодарности
+      sessionStorage.setItem('applicationSent', 'true');
+
       form.reset({
         fullName: "",
         birthDate: "",
         phone: "+375"
       });
       setIsPhoneComplete(false);
+
+      // Переходим на страницу благодарности
+      navigate('/thank-you');
 
     } catch (error: any) {
       console.error('Submit error:', error);
